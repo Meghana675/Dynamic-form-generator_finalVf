@@ -1,7 +1,7 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 
+// Define types for the schema
 interface FieldSchema {
   id: string;
   type: string;
@@ -21,11 +21,11 @@ interface JSONSchema {
   fields: FieldSchema[];
 }
 
-interface FormPreviewProps {
+interface FormGeneratorProps {
   schema: string;
 }
 
-const FormPreview: React.FC<FormPreviewProps> = ({ schema }) => {
+const FormGenerator: React.FC<FormGeneratorProps> = ({ schema }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = (data: any) => {
@@ -37,6 +37,11 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema }) => {
     parsedSchema = JSON.parse(schema);
   } catch {
     return <div className="w-full md:w-1/2 p-4">Invalid JSON Schema</div>;
+  }
+
+  // Add a null check for `parsedSchema`
+  if (!parsedSchema) {
+    return <div className="w-full md:w-1/2 p-4">Invalid or missing schema</div>;
   }
 
   return (
@@ -79,4 +84,4 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema }) => {
   );
 };
 
-export default FormPreview;
+export default FormGenerator;
