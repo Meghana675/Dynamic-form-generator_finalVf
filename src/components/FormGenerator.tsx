@@ -1,33 +1,63 @@
+import React from "react";
+import { useForm } from "react-hook-form";
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
+// Define types for the schema
+interface FieldSchema {
+  id: string;
+  type: string;
+  label: string;
+  required?: boolean;
+  placeholder?: string;
+  options?: { value: string; label: string }[];
+  validation?: {
+    pattern?: string;
+    message?: string;
+  };
+}
 
-const FormGenerator = ({ jsonSchema }) => {
+interface JSONSchema {
+  formTitle: string;
+  formDescription: string;
+  fields: FieldSchema[];
+}
+
+interface FormGeneratorProps {
+  jsonSchema: JSONSchema;
+}
+
+const FormGenerator: React.FC<FormGeneratorProps> = ({ jsonSchema }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = (data) => {
-    console.log('Form Submitted:', data);
+  const onSubmit = (data: any) => {
+    console.log("Form Submitted:", data);
   };
-
-  if (!jsonSchema || !jsonSchema.fields) {
-    return <p>Provide a valid JSON schema to generate a form.</p>;
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {jsonSchema.fields.map((field) => (
         <div key={field.id} className="mb-4">
-          <label className="block text-sm font-bold mb-2">{field.label}</label>
-          {field.type === 'text' && (
-            <input
-              type="text"
+          <label className="block font-bold">{field.label}</label>
+          {field.type === "select" ? (
+            <select
+              className="w-full border p-2"
               {...register(field.id, { required: field.required })}
-              placeholder={field.placeholder}
-              className="w-full p-2 border rounded"
+            >
+              {field.options?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              className="w-full border p-2"
+              type={field.type}
+              placeholder={field.placeholder || ""}
+              {...register(field.id, { required: field.required })}
             />
           )}
           {errors[field.id] && (
-            <p className="text-red-500 text-sm">This field is required.</p>
+            <p className="text-red-500">{field.validation?.message || "This field is required"}</p>
           )}
         </div>
       ))}
