@@ -1,0 +1,33 @@
+
+/* Tailwind CSS base styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom global styles */
+body {
+  @apply bg-gray-100 text-gray-900;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply text-gray-800;
+}
+
+button {
+  @apply bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition;
+}
+
+input, textarea, select {
+  @apply border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none p-2 w-full;
+}
+
+textarea {
+  min-height: 100px;
+}
+
+.error-message {
+  @apply text-red-500 text-sm;
+}
